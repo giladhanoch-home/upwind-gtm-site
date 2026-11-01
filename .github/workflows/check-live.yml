@@ -1,0 +1,15 @@
+name: Check live site
+on:
+  push:
+    paths: ['.github/workflows/check-live.yml']
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          sleep 60
+          B=https://giladhanoch-home.github.io/upwind-gtm-site
+          for f in "" brain.html key.json; do echo "$(curl -s -o /dev/null -w '%{http_code} %{size_download}' "$B/$f?c=$RANDOM") /$f"; done
+          curl -s "$B/" | grep -c 'brain-link' | sed 's/^/brain-link on welcome: /'
